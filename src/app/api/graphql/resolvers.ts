@@ -13,7 +13,7 @@ const getUser = (context: any) => {
     return user;
 };
 
-const checkRole = (user: any, roles: Role[]) => {
+const checkRole = (user: any, roles: any[]) => {
     if (!roles.includes(user.role)) {
         throw new GraphQLError('Forbidden', {
             extensions: { code: 'FORBIDDEN' },
@@ -21,7 +21,7 @@ const checkRole = (user: any, roles: Role[]) => {
     }
 };
 
-const checkCountry = (user: any, targetCountry: Country) => {
+const checkCountry = (user: any, targetCountry: any) => {
     if (user.country !== targetCountry) {
         throw new GraphQLError('Access restricted by country', {
             extensions: { code: 'FORBIDDEN' },

@@ -12,7 +12,7 @@ export const comparePassword = async (password: string, hash: string) => {
     return await bcrypt.compare(password, hash);
 };
 
-export const signToken = (user: User) => {
+export const signToken = (user: any) => {
     return jwt.sign(
         { sub: user.id, email: user.email, role: user.role, country: user.country },
         JWT_SECRET,
