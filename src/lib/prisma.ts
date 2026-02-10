@@ -1,17 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 
-const prismaClientSingleton = () => {
-    return new PrismaClient();
-};
-
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
-
 const globalForPrisma = globalThis as unknown as {
-    prisma: PrismaClientSingleton | undefined;
+    prisma: PrismaClient | undefined;
 };
 
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+// Use a proxy to lazy-initialize the Prisma client only when first accessed.
+// This prevents database connection attempts during the Next.js build/static analysis phase.
+const prisma = new Proxy({} as PrismaClient, {
+    get(target, prop, receiver) {
+        if (!globalForPrisma.prisma) {
+            globalForPrisma.prisma = new PrismaClient();
+        }
+        return Reflect.get(globalForPrisma.prisma, prop, receiver);
+    }
+});
 
 export default prisma;
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

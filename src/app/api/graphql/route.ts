@@ -7,23 +7,31 @@ import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-});
+let apolloHandler: any;
 
-const apolloHandler = startServerAndCreateNextHandler<NextRequest>(server, {
-    context: async (req) => {
-        const token = req.headers.get('authorization')?.replace('Bearer ', '');
-        const user = token ? verifyToken(token) : null;
-        return { user };
-    },
-});
+async function getApolloHandler() {
+    if (!apolloHandler) {
+        const server = new ApolloServer({
+            typeDefs,
+            resolvers,
+        });
+        apolloHandler = startServerAndCreateNextHandler<NextRequest>(server, {
+            context: async (req) => {
+                const token = req.headers.get('authorization')?.replace('Bearer ', '');
+                const user = token ? verifyToken(token) : null;
+                return { user };
+            },
+        });
+    }
+    return apolloHandler;
+}
 
 export async function GET(request: NextRequest, context: { params: Promise<any> }) {
-    return apolloHandler(request) as Promise<Response>;
+    const handler = await getApolloHandler();
+    return handler(request) as Promise<Response>;
 }
 
 export async function POST(request: NextRequest, context: { params: Promise<any> }) {
-    return apolloHandler(request) as Promise<Response>;
+    const handler = await getApolloHandler();
+    return handler(request) as Promise<Response>;
 }
