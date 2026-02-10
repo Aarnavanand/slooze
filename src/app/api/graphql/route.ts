@@ -5,6 +5,8 @@ import { resolvers } from './resolvers';
 import { verifyToken } from '@/lib/auth';
 import { NextRequest } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 const server = new ApolloServer({
     typeDefs,
     resolvers,
