@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 60 25% 98.4%;
+    /* #FAFAF9 */
+    --foreground: 24 10% 10%;
+    /* #1C1917 */
+    --card: 0 0% 100%;
+    /* #FFFFFF */
+    --card-foreground: 24 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 10% 10%;
+    --primary: 221 83% 53.3%;
+    /* #2563EB */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 244 75% 58.6%;
+    /* #4F46E5 */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 210 40% 96.1%;
+    /* #F1F5F9 */
+    --muted-foreground: 24 5.4% 32.9%;
+    /* #57534E */
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 24 10% 10%;
+    --destructive: 0 73.7% 41.8%;
+    /* #B91C1C */
+    --destructive-foreground: 210 40% 98%;
+    --border: 20 5.9% 90%;
+    /* #E7E5E4 */
+    --input: 20 5.9% 90%;
+    --ring: 221 83% 53.3%;
+    --success: 142 71.8% 29.2%;
+    /* #15803D */
+    --error: 0 73.7% 41.8%;
+    /* #B91C1C */
+    --highlight: 38 92.2% 50%;
+    /* #F59E0B */
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222 47.4% 11.2%;
+    /* #0F172A */
+    --foreground: 210 14.3% 91.4%;
+    /* #E5E7EB */
+    --card: 228 84.2% 4.9%;
+    /* #020617 */
+    --card-foreground: 210 14.3% 91.4%;
+    --popover: 228 84.2% 4.9%;
+    --popover-foreground: 210 14.3% 91.4%;
+    --primary: 217.2 91.2% 59.8%;
+    /* #3B82F6 */
+    --primary-foreground: 222 47.4% 11.2%;
+    --secondary: 235 88.6% 74.1%;
+    /* #818CF8 */
+    --secondary-foreground: 222 47.4% 11.2%;
+    --muted: 217.2 32.6% 17.5%;
+    /* #1E293B */
+    --muted-foreground: 217.9 10.6% 64.9%;
+    /* #9CA3AF */
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 14.3% 91.4%;
+    --destructive: 0 84.2% 60.2%;
+    /* #EF4444 */
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    /* #1E293B */
+    --input: 217.2 32.6% 17.5%;
+    --ring: 217.2 91.2% 59.8%;
+    --success: 142.1 70.6% 45.3%;
+    /* #22C55E */
+    --error: 0 84.2% 60.2%;
+    /* #EF4444 */
+    --highlight: 44.5 96% 56.5%;
+    /* #FBBF24 */
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }

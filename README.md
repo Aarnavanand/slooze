@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Slooze — Premium Food SaaS Platform
 
-## Getting Started
+Slooze is a production-ready, multi-role Food SaaS platform designed with a high-end "Warm Neutral" aesthetic. It features a robust architecture supporting multiple countries with strict Role-Based Access Control (RBAC) and data isolation.
 
-First, run the development server:
+## 🚀 Overview
+The platform allows users to browse restaurants, explore menus, and manage orders. Security and data integrity are central to the design, ensuring that users can only interact with resources belonging to their assigned country and role.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🛠️ Tech Stack
+- **Frontend**: Next.js 15+ (App Router), TypeScript, Tailwind CSS v4, Lucide React.
+- **Backend API**: GraphQL (Apollo Server) integrated via Next.js Route Handlers.
+- **Data Layer**: Prisma ORM with SQLite (for demonstration).
+- **Authentication**: JWT-based session management with Bcrypt password hashing.
+- **Styling**: Modern "Warm Neutral Food SaaS" theme with full Dark Mode support.
+
+## ⚙️ Setup Instructions
+
+### 1. Prerequisite Environments
+Create a `.env` file in the root directory:
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="your-secure-secret-key"
+NEXT_PUBLIC_GRAPHQL_URI="http://localhost:3000/api/graphql"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Database Initialization
+Install dependencies and prepare the database:
+```bash
+npm install
+npx prisma generate
+npx prisma migrate dev --name init
+npm run seed
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Running the Application
+```bash
+# Development Mode
+npm run dev
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Production Build
+npm run build
+npm run start
+```
 
-## Learn More
+## 👥 Seeded Users
+| Role | Email | Password | Country |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@example.com` | `password123` | USA |
+| **Manager (IN)** | `manager.in@example.com` | `password123` | INDIA |
+| **Member (IN)** | `member.in@example.com` | `password123` | INDIA |
+| **Manager (US)** | `manager.us@example.com` | `password123` | USA |
+| **Member (US)** | `member.us@example.com` | `password123` | USA |
 
-To learn more about Next.js, take a look at the following resources:
+## 🛡️ Security & Access Control
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Role-Permission Matrix
+| Feature | Member | Manager | Admin |
+| :--- | :---: | :---: | :---: |
+| Browse Restaurants/Menus | ✅ | ✅ | ✅ |
+| Add to Cart / Place Order | ✅ | ✅ | ✅ |
+| Checkout & Payments | ✅ | ✅ | ✅ |
+| Manage Staff Orders | ❌ | ✅ | ✅ |
+| Edit Payment Methods | ❌ | ❌ | ✅ |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Country-Based Isolation
+Data access is restricted by the `Country` flag on both the user and the resource. 
+- **Enforcement**: This is handled at the **GraphQL Resolver level** using a `checkCountry` middleware utility.
+- **Result**: A user in India cannot browse restaurants in the USA, nor can a USA Manager access Indian order documents.
 
-## Deploy on Vercel
+### Identity Design
+- **JWT**: Tokens are signed on the server and verified for every request via the Apollo Context.
+- **Encryption**: Passwords are never stored in plain text; Bcrypt hashing (salt rounds: 10) is applied before storage.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧪 How to Test
+1. **Login as Member (India)**: 
+   - Navigate to **Restaurants**. You should only see Indian restaurants (e.g., Curry House).
+   - Add items to your **Cart** and proceed to **Dashboard** to see your current activity.
+2. **Switch to Manager (USA)**:
+   - Verify that the **Restaurants** list now displays USA-specific entries (e.g., Burger King).
+   - Attempting to access an Indian restaurant ID via URL will result in a "Forbidden" GraphQL error.
+3. **Verify Admin Access**:
+   - Log in as the Admin (USA).
+   - Access the **Payments** section to view and manage billing information (Access is restricted for other roles).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
