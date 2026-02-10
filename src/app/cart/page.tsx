@@ -39,7 +39,7 @@ export default function CartPage() {
     const [createOrder, { loading: creating }] = useMutation(CREATE_ORDER);
     const [checkoutOrder, { loading: checkingOut }] = useMutation(CHECKOUT_ORDER);
 
-    const canCheckout = user && (user.role === "ADMIN" || user.role === "MANAGER");
+    const canCheckout = !!user;
 
     const handlePlaceOrder = async () => {
         if (!restaurantId) return;
@@ -170,10 +170,10 @@ export default function CartPage() {
                                     ) : (
                                         <div className="w-full space-y-2">
                                             <Button disabled className="w-full" size="lg">
-                                                Checkout (Admin/Manager Only)
+                                                Log in to Checkout
                                             </Button>
                                             <p className="text-xs text-center text-muted-foreground">
-                                                Only Admins and Managers can complete checkout
+                                                Please log in to complete your purchase
                                             </p>
                                         </div>
                                     )}

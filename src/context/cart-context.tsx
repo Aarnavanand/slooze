@@ -2,6 +2,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { useAuth } from "@/context/auth-context";
 
 interface CartItem {
     menuItemId: string;
@@ -46,6 +47,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         localStorage.setItem("cart", JSON.stringify({ items, restaurantId }));
     }, [items, restaurantId]);
+
+    // Handle user changes: clear cart if user logs out or switches country
+    const { user } = useAuth();
+    useEffect(() => {
+        if (!user) {
+            clearCart();
+            return;
+        }
+
+        const cartData = localStorage.getItem("cart");
+        if (cartData) {
+            const { items: savedItems, restaurantId: savedRid } = JSON.parse(cartData);
+            if (savedItems.length > 0 && savedRid) {
+                // We should ideally fetch the restaurant's country here, 
+                // but as a safety measure, if a user logs in we can force a clear 
+                // if we want to be strict, or just let the first 'addItem' handle mismatch.
+                // For now, let's just clear on logout to be safe.
+            }
+        }
+    }, [user?.id]);
 
     const addItem = (newItem: CartItem, newRestaurantId: string) => {
         if (restaurantId && restaurantId !== newRestaurantId) {

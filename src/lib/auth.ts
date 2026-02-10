@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { User, Role, Country } from '@prisma/client';
+import { User, Role, Country } from './types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 
@@ -22,7 +22,13 @@ export const signToken = (user: User) => {
 
 export const verifyToken = (token: string) => {
     try {
-        return jwt.verify(token, JWT_SECRET) as { sub: string; email: string; role: Role; country: Country };
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        return {
+            id: decoded.sub,
+            email: decoded.email,
+            role: decoded.role as Role,
+            country: decoded.country as Country
+        };
     } catch (e) {
         return null;
     }

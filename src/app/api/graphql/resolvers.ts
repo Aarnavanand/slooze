@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { signToken, comparePassword, hashPassword } from '@/lib/auth';
 import { GraphQLError } from 'graphql';
-import { Role, Country, OrderStatus } from '@prisma/client';
+import { Role, Country, OrderStatus } from '@/lib/types';
 
 const getUser = (context: any) => {
     const user = context.user;
@@ -155,7 +155,7 @@ export const resolvers = {
         },
         checkoutOrder: async (_: any, { id }: any, context: any) => {
             const user = getUser(context);
-            checkRole(user, [Role.MEMBER]);
+            checkRole(user, [Role.ADMIN, Role.MANAGER, Role.MEMBER]);
 
             const order = await prisma.order.findUnique({ where: { id } });
             if (!order) throw new GraphQLError('Order not found');
