@@ -31,7 +31,7 @@ export function RestaurantCard({ id, name, country }: RestaurantCardProps) {
             </CardContent>
             <CardFooter className="pt-0">
                 <Link href={`/restaurants/${id}`} className="w-full">
-                    <Button variant="outline" className="w-full border-border hover:bg-primary hover:text-white transition-all">
+                    <Button variant="outline" className="w-full border-border hover:bg-primary hover:text-primary-foreground transition-all">
                         View Menu
                     </Button>
                 </Link>

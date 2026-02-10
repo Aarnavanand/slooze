@@ -112,7 +112,8 @@ export default function LoginPage() {
                                 </button>
 
                                 {showDropdown && (
-                                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-border rounded-lg shadow-xl max-h-60 overflow-auto">
+                                    <div className=" z-50 w-full mt-2 border border-border rounded-xl shadow-2xl ring-1 ring-black/5 dark:ring-white/10 max-h-60 overflow-auto overflow-x-hidden animate-in fade-in zoom-in-95 duration-200">
+
                                         {SEEDED_USERS.map((user) => (
                                             <button
                                                 key={user.email}

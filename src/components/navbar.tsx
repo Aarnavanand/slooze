@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
+import { useCart } from "@/context/cart-context";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +11,10 @@ import { useState } from "react";
 
 export function Navbar() {
     const { user, logout } = useAuth();
+    const { items } = useCart();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -34,8 +38,13 @@ export function Navbar() {
                                     <Button variant="ghost">Restaurants</Button>
                                 </Link>
                                 <Link href="/cart">
-                                    <Button variant="ghost" size="icon">
+                                    <Button variant="ghost" size="icon" className="relative">
                                         <ShoppingCart className="h-5 w-5" />
+                                        {itemCount > 0 && (
+                                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm ring-1 ring-background">
+                                                {itemCount}
+                                            </span>
+                                        )}
                                     </Button>
                                 </Link>
                                 {user.role === "ADMIN" && (
@@ -122,9 +131,14 @@ export function Navbar() {
                                     </Button>
                                 </Link>
                                 <Link href="/cart" onClick={() => setMobileMenuOpen(false)}>
-                                    <Button variant="ghost" className="w-full justify-start">
+                                    <Button variant="ghost" className="w-full justify-start relative">
                                         <ShoppingCart className="h-5 w-5 mr-2" />
                                         Cart
+                                        {itemCount > 0 && (
+                                            <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm ring-1 ring-background">
+                                                {itemCount}
+                                            </span>
+                                        )}
                                     </Button>
                                 </Link>
                                 {user.role === "ADMIN" && (
